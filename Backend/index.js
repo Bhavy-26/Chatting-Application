@@ -15,10 +15,16 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Request send karne ke liye from frontend to backend
-app.use(cors({
+const corsOptions = {
     origin: "http://localhost:5173",
-    credentials: true
-}));
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+};
+
+app.use(cors(corsOptions));
+// Ensure preflight requests are handled for all routes
+app.options("*", cors(corsOptions));
 
 
 app.use("/api/auth", authRouter);
