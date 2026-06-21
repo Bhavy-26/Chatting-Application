@@ -5,10 +5,11 @@ import authRouter from "./src/routes/auth.route.js";
 import cookieParser from "cookie-parser";
 import messageRouter from "./src/routes/message.route.js";
 import cors from "cors"
+import {app,server} from "./src/config/socket.js"
 
 dotenv.config()
 
-const app = express()
+// const app = express()
 
 app.use(express.json());
 app.use(cookieParser());
@@ -28,7 +29,7 @@ const PORT = process.env.PORT || 3000;
 const startServer = async () => {
     try {
         await connectDB();
-        app.listen(PORT, () => {
+        server.listen(PORT, () => {
             console.log(`Server running at PORT ${PORT}`);
         });
     } catch (error) {

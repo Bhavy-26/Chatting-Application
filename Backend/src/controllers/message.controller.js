@@ -3,6 +3,7 @@ import User from "../models/user.model.js"
 import Message from "../models/message.model.js"
 
 import cloudinary from "../config/cloudinary.js";
+import { getReceiverSocketId , io } from "../config/socket.js";
 
 export const getUsersForSidebar = async (req, res) => {
     try {
@@ -66,6 +67,11 @@ export const sendMessage = async (req, res) => {
         await newMessage.save();
 
         // socket.io waali functionality yaha hogi for real-time conversations
+
+        const receiverSocketId = getReceiverSocketId(receiverId)
+        if(receiverSocketId){  // online hai toh message bhej do
+            io.to(receiverSocketId).emit("newMessage",newMessage);    // 1 on 1 chat ke liye apan ne io.to().emit() kara agar group chat hoti toh io.emit() karte
+        }
 
 
         res.status(201).json(newMessage);
