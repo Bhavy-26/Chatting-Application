@@ -8,18 +8,25 @@ import { formatMessageTime } from '../lib/utils';
 
 const ChatContainer = () => {
 
-    const { messages, getMessages, isMessagesLoading, selectedUser } = useChatStore();
+    const { messages, getMessages, isMessagesLoading, selectedUser , subscribeToMessages , unsubscribeFromMessages } = useChatStore();
 
     const { authUser } = useAuthStore();
     const messageEndRef = useRef(null);
 
     useEffect(() => {
+
         if (selectedUser?._id) {
             getMessages(selectedUser._id);
         }
-    }, [selectedUser?._id, getMessages])
 
-    useEffect(() => {
+        subscribeToMessages();
+
+        return () => unsubscribeFromMessages();
+
+    }, [selectedUser?._id, getMessages,subscribeToMessages,unsubscribeFromMessages])
+
+
+    useEffect(() => {   // yeh apne aap scroll kar dega new chats aate hi
         messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages])
 
